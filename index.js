@@ -11,11 +11,16 @@ canvas.height = 576
 //Takes the width of the map from Tiled, and sets it to the the gain of I
 //Then adds an array of arrays that contain the collision tiles relative position.
 const collisionsMap = []
-console.log(collisions)
 for (let i = 0; i < collisions.length; i+= 70) {
     collisionsMap.push(collisions.slice(i, 70 + i))
 }
 
+const battleZonesMap = []
+for (let i = 0; i < battleZonesData.length; i+= 70) {
+    battleZonesMap.push(battleZonesData.slice(i, 70 + i))
+}
+
+console.log(battleZonesMap)
 
 
 const boundaries = []
@@ -32,15 +37,32 @@ collisionsMap.forEach((row, i) => {
                 new Boundary({
                     position: {
                         x: j * Boundary.width + offset.x + 22,
-                        y: i * Boundary.height + offset.y - 4
-                    }
+                        y: i * Boundary.height + offset.y + 2
+                    },
+                    width: 12,
+                    height: 2
                 })
             )
         }
     })
 })
 
-console.log(boundaries)
+const battleZones = []
+
+battleZonesMap.forEach((row, i) => {
+    row.forEach((index, j) => {
+        if(index === 1026){
+            battleZones.push(
+                new Boundary({
+                    position: {
+                        x: j * Boundary.width + offset.x,
+                        y: i * Boundary.height + offset.y - 17
+                    }
+                })
+            )
+        }
+    })
+})
 
 // setting background to be Lushel Coast
 const image = new Image()
@@ -112,7 +134,7 @@ const keys = {
     }
 }
 
-const movables = [background, ...boundaries, foreground]
+const movables = [background, ...boundaries, foreground, ...battleZones]
 
 function rectangularCollision({rectangle1, rectangle2}) {
     return (
@@ -129,13 +151,36 @@ function animate() {
     boundaries.forEach(boundary => {
         boundary.draw()
     })
+    battleZones.forEach(battleZone => {
+        battleZone.draw()
+    })
     player.draw()
     foreground.draw()
+
+    if(keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed ){
+        for (let i = 0; i < battleZones.length; i++){
+            const battleZone = battleZones[i]
+            const overLappingArea = (Math.min(player.position.x + player.width, battleZone.position.x + battleZone.width) - Math.max(player.position.x, battleZone.position.x)) * (Math.min(player.position.y + player.height, battleZone.position.y + battleZone.height) - Math.max(player.position.y, battleZone.position.y))
+            if (
+                rectangularCollision({
+                    rectangle1: player,
+                    rectangle2: battleZone
+                }) &&
+                overLappingArea > (player.width * player.height) / 2
+                && Math.random() < 0.01
+            ) {
+                console.log("noob")
+                break
+            }
+        }
+    }
+
     let moving = true
     player.moving = false
     if (keys.w.pressed && lastKey === 'w'){
         player.moving = true
         player.image = player.sprites.up
+
         for (let i = 0; i < boundaries.length; i++){
             const boundary = boundaries[i]
             if (
@@ -151,6 +196,7 @@ function animate() {
                 break
             }
         }
+
         if (moving)
         movables.forEach(moveable => {
             moveable.position.y += 3
