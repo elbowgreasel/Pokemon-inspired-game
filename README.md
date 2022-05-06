@@ -10,7 +10,7 @@ This is a game I am making using HTML/CSS/JavaScript that is inspired by Pokémo
 
 - _Chris Courses_
    
-   Fighting Game tutorial video: https://youtu.be/vyqbNFMDRGQ
+   Pokémon JavaScript Game Tutorial video: https://youtu.be/yP5DKzriqXA
    
    Twitter: https://twitter.com/chriscourses
 
