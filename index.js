@@ -7,7 +7,6 @@ const c = canvas.getContext('2d')
 canvas.width = 1024
 canvas.height = 576
 
-
 //Takes the width of the map from Tiled, and sets it to the the gain of I
 //Then adds an array of arrays that contain the collision tiles relative position.
 const collisionsMap = []
@@ -145,8 +144,12 @@ function rectangularCollision({rectangle1, rectangle2}) {
     )
 }
 
+const battle = {
+    initiated: false
+}
+
 function animate() {
-    window.requestAnimationFrame(animate)
+    const animationId = window.requestAnimationFrame(animate)
     background.draw()
     boundaries.forEach(boundary => {
         boundary.draw()
@@ -157,9 +160,18 @@ function animate() {
     player.draw()
     foreground.draw()
 
+    // sets player movement, needed before battle initiation to stop movement
+    let moving = true
+    player.moving = false
+
+    //if battle is initiated stop all the below code
+    if(battle.initiated) return
+
+    // Activate a battle-----------------------------------
     if(keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed ){
         for (let i = 0; i < battleZones.length; i++){
             const battleZone = battleZones[i]
+            // detect collision overlap
             const overLappingArea = (Math.min(player.position.x + player.width, battleZone.position.x + battleZone.width) - Math.max(player.position.x, battleZone.position.x)) * (Math.min(player.position.y + player.height, battleZone.position.y + battleZone.height) - Math.max(player.position.y, battleZone.position.y))
             if (
                 rectangularCollision({
@@ -169,14 +181,37 @@ function animate() {
                 overLappingArea > (player.width * player.height) / 2
                 && Math.random() < 0.01
             ) {
-                console.log("noob")
+                // deactivate current animation loop
+                window.cancelAnimationFrame(animationId)
+
+                // Swap to battle-screen
+                battle.initiated = true
+                gsap.to('#battle-screen', {
+                    opacity: 1,
+                    repeat: 3,
+                    yoyo: true,
+                    duration: 0.35,
+                    onComplete(){
+                        gsap.to(`#battle-screen`, {
+                            opacity: 1,
+                            duration: 0.4,
+                            onComplete() {
+                                // activate a new animation loop
+                                animateBattle()
+                                gsap.to(`#battle-screen`, {
+                                    opacity: 0,
+                                    duration: 0.4
+                                })
+                            }
+                        })
+                    }
+                })
                 break
             }
         }
     }
 
-    let moving = true
-    player.moving = false
+    // Movement--------------------------------------------
     if (keys.w.pressed && lastKey === 'w'){
         player.moving = true
         player.image = player.sprites.up
@@ -273,6 +308,20 @@ function animate() {
     }
 }
 animate()
+
+const battleBackgroundImage = new Image()
+battleBackgroundImage.src = `./img/battleBackground.png`
+const battleBackground = new Sprite({
+    position: {
+    x: 0,
+    y: 0
+    },
+    image: battleBackgroundImage
+})
+function animateBattle() {
+    window.requestAnimationFrame(animateBattle)
+    battleBackground.draw()
+}
 
 let lastKey = ''
 window.addEventListener('keydown', (e) => {
