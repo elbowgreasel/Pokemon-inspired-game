@@ -25,11 +25,16 @@ html {
 /* BASE STYLES
 /*******************************************/
 
+*{
+     font-family: 'Press Start 2P', cursive;
+}
+
 body{
      width: 100%;
      height: 100%;
      margin: 0;
      padding: 0;
+     position: relative;
 }
 
 #game-screen{
@@ -38,7 +43,7 @@ body{
      
 }
 
-#battle-screen{
+#transition-screen{
      background-color: black;
      position: absolute;
      top: 0;
@@ -48,3 +53,57 @@ body{
      pointer-events: none;
      opacity: 0;
 }
+
+#battle-screen{
+     background-color: white;
+     height: 130px;
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     border-top: 4px solid black;
+}
+
+#player-selection-screen{
+     position: absolute;
+     display: flex;
+     width: 100%;
+     height: 100%;
+}
+
+#additional-selections{
+     flex-basis: 66.66%;
+}
+
+#primary-selections{
+     flex-basis: 33.33%;
+     border-left: 4px solid black;
+}
+
+
+#primary-selections ul, #additional-selections ul{
+     display: flex;
+     flex-direction: row;
+     list-style: none;
+     flex-wrap: wrap;
+     margin: 0;
+     padding: 0;
+     height: 100%;
+}
+
+#primary-selections li, #additional-selections li{
+     flex-basis: 50%;
+     height: 50%;
+}
+
+#primary-selections li button, #additional-selections li button{
+     width: 100%;
+     height: 100%;
+}
+
+#primary-selections li button:hover, #additional-selections li button:hover{
+     color: rgb(7, 197, 7);
+     background-color: grey;
+     cursor: pointer;
+}
+

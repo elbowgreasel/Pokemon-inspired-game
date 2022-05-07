@@ -4,8 +4,11 @@
     	<meta charset="utf-8">
     	<meta name="description" content="Your description goes here">
     	<meta name="keywords" content="one, two, three">
+		<title>Greaseemon</title>
 
-		<title>Blank Template</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300&display=swap" rel="stylesheet">
 
 		<!-- external CSS link -->
 		<link rel="stylesheet" href="css/normalize.css">
@@ -13,8 +16,29 @@
 	</head>
 	<body>
         <div id="game-screen">
-            <div id="battle-screen"></div>
+            <div id="transition-screen">
+			</div>
             <canvas></canvas>
+			<div id="battle-screen">
+				<div id="player-selection-screen">
+					<div id="additional-selections">
+						<ul id="attack-selections">
+							<li><button class="attack-selection">Attack 1</button></li>
+							<li><button class="attack-selection">Attack 2</button></li>
+							<li><button class="attack-selection">Attack 3</button></li>
+							<li><button class="attack-selection">Attack 4</button></li>
+						</ul>
+					</div>
+					<div id="primary-selections">
+						<ul>
+							<li><button id="attack-selector">Fight</button></li>
+							<li><button id="attack-selector">Bag</button></li>
+							<li><button id="attack-selector">Creatures</button></li>
+							<li><button id="attack-selector">Run</button></li>
+						</ul>
+					</div>
+				</div>
+			</div>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js" integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="./data/battleZonesData.js"></script>
